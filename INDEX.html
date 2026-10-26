@@ -23,8 +23,8 @@
  <header class="topbar"><h1>NO.6 · GF 투과 비교</h1><span id="cameraBadge" class="badge">카메라 OFF</span></header>
  <section class="card">
   <div class="preview" id="preview"><video id="video" autoplay muted playsinline></video><div class="placeholder">전면 카메라</div><div class="aim" aria-hidden="true"></div></div>
-  <div class="buttons cameraButtons"><button id="start" class="primary">카메라 켜기</button><button id="retry" class="mini" hidden disabled>노출 재고정</button><button id="stop" class="mini" hidden disabled>카메라 끄기</button></div>
-  <div class="indicators"><span class="indicator" id="exposureState">노출 확인 전</span><span class="indicator" id="stabilityState">안정도 —</span></div>
+  <div class="buttons cameraButtons"><button id="start" class="primary">카메라 켜기</button><button id="retry" class="mini" hidden disabled>노출 고정 시도</button><button id="stop" class="mini" hidden disabled>카메라 끄기</button></div>
+  <div class="indicators"><span class="indicator" id="exposureState">노출 확인 전</span><span class="indicator" id="stabilityState">안정도 —</span><span class="indicator" id="lightState">포화 —</span></div>
  </section>
  <section class="card">
   <div class="grid">
@@ -78,7 +78,7 @@
  history=loadRecords();
  function setMessage(msg,type=''){const e=$('message');e.textContent=msg;e.className='message'+(type?' '+type:'')}
  function badge(id,text,kind=''){const e=$(id);e.textContent=text;e.className=(id==='cameraBadge'?'badge':'indicator')+(kind?' '+kind:'')}
- function exposureSnapshot(){const s=track?.getSettings?.()??{};settings=s;locked=s.exposureMode==='manual'&&Number.isFinite(s.exposureTime)&&Number.isFinite(s.iso);badge('exposureState',!running?'노출 확인 전':locked?'노출 고정':'노출 자동 / 미확인',locked?'good':running?'warn':'');$('retry').hidden=!running||locked;return s}
+ function exposureSnapshot(){const s=track?.getSettings?.()??{};settings=s;locked=s.exposureMode==='manual'&&Number.isFinite(s.exposureTime)&&Number.isFinite(s.iso);badge('exposureState',!running?'노출 확인 전':locked?'노출 고정 확인':'노출 미고정 / 미확인',locked?'good':running?'warn':'');$('retry').hidden=!running;$('retry').disabled=!running;return s}
  function captureKey(){const s=settings;return JSON.stringify({mode:s.exposureMode??'?',iso:locked?s.iso:'auto',time:locked?s.exposureTime:'auto',wb:s.whiteBalanceMode??'?',color:s.colorTemperature??'?',device:s.deviceId??''})}
  function validBase(){return Boolean(running&&baseline&&baseline.session===session&&baseline.key===captureKey())}
  function linear(c){const t=c/255;return t<=0.04045?t/12.92:((t+.055)/1.055)**2.4}
@@ -98,15 +98,15 @@
  function recent(){return frames.filter(f=>Date.now()-f.at<2400).slice(-14)}
  function measurement(){const a=recent();return median(a.slice(-5).map(f=>f.value))}
  function variation(){const a=recent();if(!a.length)return {n:0,cv:Infinity};const m=a.reduce((s,f)=>s+f.value,0)/a.length;const d=Math.sqrt(a.reduce((s,f)=>s+(f.value-m)**2,0)/a.length);return {n:a.length,cv:m>0?100*d/m:Infinity}}
- function quality(){if(!running||!live)return '대기';if(live.clip>=.012||live.value>=97)return '과다광';if(live.value<.3||live.black>=.35)return '광량 부족';if(live.spatialCV>=.6)return '광원 불균일';const s=variation();if(s.n<9)return '안정화 중';if(s.cv>2.5)return '신호 불안정';return '안정'}
- function update(){const active=validBase(),q=quality(),v=measurement(),s=variation(),comparable=active&&Number.isFinite(v)&&v>=0&&baseline.value>0;const ratio=comparable?percentDiff(baseline.value,v).ratio:NaN;
+ function quality(){if(!running||!live)return '대기';if(live.clip>=.005||live.value>=97)return '과다광';if(live.value<.3||live.black>=.35)return '광량 부족';if(live.spatialCV>=.6)return '광원 불균일';const s=variation();if(s.n<9)return '안정화 중';if(s.cv>2.5)return '신호 불안정';return '안정'}
+ function update(){const active=validBase(),q=quality(),v=measurement(),s=variation(),comparable=active&&q!=='과다광'&&q!=='광량 부족'&&q!=='광원 불균일'&&Number.isFinite(v)&&v>=0&&baseline.value>0;const ratio=comparable?percentDiff(baseline.value,v).ratio:NaN;
   $('live').textContent=running?num(v):'—';$('base').textContent=active?num(baseline.value):'—';$('ratio').textContent=pct(ratio);$('decrease').textContent=pct(100-ratio);$('ratioBar').style.width=comparable?Math.max(0,Math.min(100,ratio))+'%':'0%';
-  badge('stabilityState',q==='안정'?'안정 · CV '+s.cv.toFixed(1)+'%':q==='신호 불안정'?'불안정 · CV '+s.cv.toFixed(1)+'%':q,q==='안정'?'good':running?'warn':'');
+  badge('stabilityState',q==='안정'?'안정 · CV '+s.cv.toFixed(1)+'%':q==='신호 불안정'?'불안정 · CV '+s.cv.toFixed(1)+'%':q,q==='안정'?'good':running?'warn':'');badge('lightState',!running?'포화 —':'포화 '+((live?.clip??0)*100).toFixed(1)+'%',running&&(live?.clip??0)>=.005?'warn':running?'good':'');
   $('register').disabled=q!=='안정';$('register').textContent=active?'기준 샘플 재등록':'기준 샘플 등록';
   $('reset').disabled=!baseline;$('save').disabled=!(comparable&&q==='안정');$('sampleBadge').textContent=active?num(baseline.value):baseline?'재등록 필요':'미등록';$('testStatus').textContent=active?(q==='안정'?'측정 등록 가능':'안정화 대기'):'기준 등록 필요';
   if(!running)return;
   if(!active&&baseline)setMessage('카메라 조건 변경 · 기준 재등록 필요','warn');
-  else if(q==='과다광'||q==='광량 부족'||q==='광원 불균일')setMessage(q+' · 광원/시편 위치를 조정하세요.','warn');
+  else if(q==='과다광'||q==='광량 부족'||q==='광원 불균일')setMessage(q+' · 유효 측정 불가. 광원 세기·거리·위치를 조정하세요.','warn');
   else if(q==='안정'&&!locked)setMessage(active?'실시간 비교 중 · 노출 고정 미지원':'신호 안정 · 노출 고정 미지원','warn');
   else if(q==='안정')setMessage(active?'테스트품 실시간 측정 중':'신호 안정 · 기준 샘플을 등록하세요.');
   else setMessage(q+' · 잠시 고정해 주세요.','warn');
