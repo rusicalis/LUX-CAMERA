@@ -53,6 +53,21 @@
   </div>
  </section>
  <section class="card">
+  <div class="head"><h2>신액 · 구액 비교 검증</h2><span class="small" id="pairStatus">기준 등록 필요</span></div>
+  <div class="buttons" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+   <button id="pairFresh" disabled>① 신액 측정</button>
+   <button id="pairFreshRef" disabled>② 기준 재확인</button>
+   <button id="pairUsed" disabled>③ 구액 측정</button>
+   <button id="pairUsedRef" disabled>④ 기준 재확인</button>
+  </div>
+  <div class="finalResult" id="pairResult" hidden aria-live="polite">
+   <div class="finalGrid"><div><span>신액 상대 신호</span><strong id="pairFreshValue">—</strong></div><div><span>구액 상대 신호</span><strong id="pairUsedValue">—</strong></div></div>
+   <div id="pairVerdict" class="finalNote" style="margin-top:10px"></div>
+  </div>
+  <div class="message" id="pairMessage">같은 기준 GF를 측정 사이에 다시 올려 측정값 복귀 여부를 확인합니다.</div>
+  <button id="pairReset" class="mini" style="margin-top:7px">비교 초기화</button>
+ </section>
+ <section class="card">
   <div class="head"><h2>측정 기록 <span id="count" class="small">0건</span></h2><div class="recordActions"><button id="csv" class="mini light">CSV 저장</button><button id="erase" class="mini danger">삭제</button></div></div>
   <div class="records" id="records"></div>
  </section>
@@ -64,7 +79,7 @@
  const $ = id => document.getElementById(id);
  const video=$('video'),frame=$('frame'),ctx=frame.getContext('2d',{willReadFrequently:true});
  const KEY='no6_gf_front_history_v4', SIZE=320,HEIGHT=240;
- let stream=null,track=null,raf=0,running=false,session=0,live=null,frames=[],baseline=null,dark=null,history=[],settings={},locked=false,lastFrameAt=0,lastSettingsAt=0,locking=false,lastConfirmed=null;
+ let stream=null,track=null,raf=0,running=false,session=0,live=null,frames=[],baseline=null,dark=null,history=[],settings={},locked=false,lastFrameAt=0,lastSettingsAt=0,locking=false,lastConfirmed=null,pair={fresh:null,freshRef:null,used:null,usedRef:null};
  const num=x=>Number.isFinite(x)?x.toFixed(2):'—';
  const pct=x=>Number.isFinite(x)?x.toFixed(1)+'%':'—';
  const percentDiff=(base,test,offset=0)=>base-offset>0&&test-offset>=0?{ratio:(test-offset)/(base-offset)*100,drop:(1-(test-offset)/(base-offset))*100}:null;
@@ -87,6 +102,36 @@
  function offset(){return validDark()?dark.value:0}
  function darkReady(){if(!running||!locked||!live||live.clip>=.005)return false;const a=recent();if(a.length<9)return false;const m=median(a.map(f=>f.value));const md=median(a.map(f=>Math.abs(f.value-m)));return md<=Math.max(.12,m*.035)&&(m<1?md<=.12:variation().cv<=6)}
  function measureCompare(base,test){if(!Number.isFinite(test)||!Number.isFinite(base))return null;const d=offset();if(validDark()&&(base-d)<Math.max(.8,d*.15))return null;return percentDiff(base,test,d)}
+ function pairReset(){pair={fresh:null,freshRef:null,used:null,usedRef:null};renderPair()}
+ function recordPairSignal(){if(!validBase()||quality()!=='안정')return null;const signal=measurement(),result=measureCompare(baseline.value,signal);if(!result)return null;return {signal,ratio:result.ratio,cv:variation().cv,at:Date.now()}}
+ function referenceDrift(o){const b=baseline?.value-offset(),v=o?.signal-offset();return b>0&&v>=0?100*(v/b-1):Infinity}
+ function pairDecision(){
+   if(!(pair.fresh&&pair.freshRef&&pair.used&&pair.usedRef))return '';
+   const d1=referenceDrift(pair.freshRef),d2=referenceDrift(pair.usedRef);
+   if(!locked)return '노출 고정 불가 · 결과 판정 보류';
+   if(!Number.isFinite(d1)||!Number.isFinite(d2)||Math.abs(d1)>3||Math.abs(d2)>3)return '기준 재측정 편차 초과(±3%) · 측정 무효 / 다시 측정';
+   const a=pair.fresh.ratio,b=pair.used.ratio,delta=a-b;
+   const noise=Math.max(5,3*Math.hypot(a*pair.fresh.cv/100,b*pair.used.cv/100));
+   if(Math.abs(delta)<=noise)return '측정 차이가 안정도 대비 작음 · 결과 판정 보류';
+   return (delta>0?'신액':'구액')+'의 카메라 투과 신호가 '+Math.abs(delta).toFixed(1)+'%p 높음 · 식각 성능 우열은 별도 검증 필요';
+ }
+ function renderPair(){
+   const active=validBase(),stable=quality()==='안정';
+   const steps=[['pairFresh',!pair.fresh],['pairFreshRef',!!pair.fresh&&!pair.freshRef],['pairUsed',!!pair.freshRef&&!pair.used],['pairUsedRef',!!pair.used&&!pair.usedRef]];
+   for(const [id,ready] of steps)$(id).disabled=!(active&&stable&&ready);
+   $('pairStatus').textContent=!active?'기준 등록 필요':pair.usedRef?'측정 완료':!pair.fresh?'신액 GF 준비':!pair.freshRef?'기준 GF 다시 올리기':!pair.used?'구액 GF 준비':'기준 GF 다시 올리기';
+   const visible=!!(pair.fresh||pair.used);$('pairResult').hidden=!visible;
+   $('pairFreshValue').textContent=pair.fresh?pct(pair.fresh.ratio):'—';$('pairUsedValue').textContent=pair.used?pct(pair.used.ratio):'—';
+   $('pairVerdict').textContent=pairDecision()||'검증 순서를 완료하면 비교 신뢰성을 확인합니다.';
+ }
+ function capturePair(type){
+   const x=recordPairSignal();if(!x)return;
+   if(type==='fresh'){pair={fresh:x,freshRef:null,used:null,usedRef:null};$('pairMessage').textContent='기준 GF로 다시 교체하고 ②를 누르세요.'}
+   else if(type==='freshRef'&&pair.fresh){pair.freshRef=x;const drift=referenceDrift(x);$('pairMessage').textContent=Math.abs(drift)<=3?'기준 복귀 '+(drift>=0?'+':'')+drift.toFixed(1)+'% · 구액으로 교체하세요.':'기준 복귀 '+drift.toFixed(1)+'% · 편차 초과. 광원·압착·위치 확인 후 비교 초기화 권장';}
+   else if(type==='used'&&pair.freshRef){pair.used=x;$('pairMessage').textContent='기준 GF로 다시 교체하고 ④를 누르세요.'}
+   else if(type==='usedRef'&&pair.used){pair.usedRef=x;const drift=referenceDrift(x);$('pairMessage').textContent='기준 복귀 '+(drift>=0?'+':'')+drift.toFixed(1)+'% · '+(locked?'노출 설정 확인됨':'노출 고정 미확인')}
+   renderPair();
+ }
  function linear(c){const t=c/255;return t<=0.04045?t/12.92:((t+.055)/1.055)**2.4}
  function readFrame(){if(video.readyState<2||!video.videoWidth)return null;
   const vw=video.videoWidth,vh=video.videoHeight,scale=Math.min(SIZE/vw,HEIGHT/vh),w=vw*scale,h=vh*scale;
@@ -111,6 +156,7 @@
   $('darkRegister').disabled=!darkReady();$('darkReset').disabled=!dark;$('darkBadge').textContent=validDark()?'보정값 '+num(dark.value):dark?'재등록 필요':locked?'미등록':'노출 고정 필요';
    $('register').disabled=q!=='안정'||(validDark()&&v-offset()<Math.max(.8,offset()*.15));$('register').textContent=active?'기준 샘플 재등록':'기준 샘플 등록';
   $('reset').disabled=!baseline;$('save').disabled=!(derived&&q==='안정');$('sampleBadge').textContent=active?num(baseline.value):baseline?'재등록 필요':'미등록';$('testStatus').textContent=active?(q==='안정'?'측정 등록 가능':'안정화 대기'):'기준 등록 필요';
+  renderPair();
   if(!running)return;
   if(!active&&baseline)setMessage('카메라 조건 변경 · 기준 재등록 필요','warn');
   else if(q==='과다광'||q==='광량 부족'||q==='광원 불균일')setMessage(q+' · 유효 측정 불가. 광원 세기·거리·위치를 조정하세요.','warn');
@@ -118,7 +164,7 @@
   else if(q==='안정')setMessage(active?'테스트품 실시간 측정 중':'신호 안정 · 기준 샘플을 등록하세요.');
   else setMessage(q+' · 잠시 고정해 주세요.','warn');
  }
- function stop(){session++;running=false;locking=false;showConfirmed(null);if(raf)cancelAnimationFrame(raf);raf=0;if(stream)stream.getTracks().forEach(t=>t.stop());stream=null;track=null;video.srcObject=null;live=null;frames=[];baseline=null;dark=null;settings={};locked=false;$('preview').classList.remove('live');$('start').disabled=false;$('start').hidden=false;$('stop').disabled=true;$('stop').hidden=true;$('retry').hidden=true;$('retry').disabled=true;badge('cameraBadge','카메라 OFF');exposureSnapshot();update()}
+ function stop(){session++;running=false;locking=false;showConfirmed(null);if(raf)cancelAnimationFrame(raf);raf=0;if(stream)stream.getTracks().forEach(t=>t.stop());stream=null;track=null;video.srcObject=null;live=null;frames=[];baseline=null;dark=null;pair={fresh:null,freshRef:null,used:null,usedRef:null};settings={};locked=false;$('preview').classList.remove('live');$('start').disabled=false;$('start').hidden=false;$('stop').disabled=true;$('stop').hidden=true;$('retry').hidden=true;$('retry').disabled=true;badge('cameraBadge','카메라 OFF');exposureSnapshot();update()}
  async function lockExposure(){if(!running||!track||locking)return;locking=true;const currentTrack=track;try{
   const caps=currentTrack.getCapabilities?.()??{},cur=currentTrack.getSettings?.()??{};
   if(Array.isArray(caps.exposureMode)&&caps.exposureMode.includes('manual')){
@@ -136,7 +182,7 @@
    if(mode){try{await currentTrack.applyConstraints({advanced:[{whiteBalanceMode:mode}]})}catch{}}
   }
   if(currentTrack!==track)return;
-  exposureSnapshot();frames=[];baseline=null;dark=null;showConfirmed(null);setMessage(locked?'카메라 노출 고정 · 기준 샘플을 등록하세요.':'노출 고정 미지원 · 비교값은 참고용입니다.',locked?'':'warn');update();
+  exposureSnapshot();frames=[];baseline=null;dark=null;pairReset();showConfirmed(null);setMessage(locked?'카메라 노출 고정 · 기준 샘플을 등록하세요.':'노출 고정 미지원 · 비교값은 참고용입니다.',locked?'':'warn');update();
  }finally{locking=false}}
  async function start(){if(running)return;stop();if(!navigator.mediaDevices?.getUserMedia){setMessage('카메라 접근 불가 · HTTPS에서 실행하세요.','bad');return}
   const token=session;try{
@@ -158,11 +204,11 @@
  }
  function register(){if(quality()!=='안정')return;const s=recent();const value=median(s.map(f=>f.value));if(!(value>0))return;
   if(validDark()&&value-offset()<Math.max(.8,offset()*.15)){setMessage('광원이 너무 어둡거나 암신호와 비슷합니다.','warn');return}
-   baseline={value,session,key:captureKey(),time:Date.now()};frames=[];showConfirmed(null);$('testId').value='';setMessage('기준 샘플 등록 완료 · GF 교체 후 안정되면 측정하세요.');update();
+   baseline={value,session,key:captureKey(),time:Date.now()};pairReset();frames=[];showConfirmed(null);$('testId').value='';setMessage('기준 샘플 등록 완료 · GF 교체 후 안정되면 측정하세요.');update();
  }
- function reset(){baseline=null;frames=[];showConfirmed(null);$('testId').value='';setMessage('기준 초기화 완료');update()}
- function registerDark(){if(!darkReady())return;const v=median(recent().map(f=>f.value));dark={value:v,session,key:captureKey(),time:Date.now()};baseline=null;frames=[];showConfirmed(null);setMessage('암신호 등록 완료 · 후레시를 켜고 기준 GF를 등록하세요.');update()}
- function resetDark(){dark=null;baseline=null;frames=[];showConfirmed(null);setMessage('암신호 보정 해제 · 기준 GF를 재등록하세요.');update()}
+ function reset(){baseline=null;pairReset();frames=[];showConfirmed(null);$('testId').value='';setMessage('기준 초기화 완료');update()}
+ function registerDark(){if(!darkReady())return;const v=median(recent().map(f=>f.value));dark={value:v,session,key:captureKey(),time:Date.now()};baseline=null;pairReset();frames=[];showConfirmed(null);setMessage('암신호 등록 완료 · 후레시를 켜고 기준 GF를 등록하세요.');update()}
+ function resetDark(){dark=null;baseline=null;pairReset();frames=[];showConfirmed(null);setMessage('암신호 보정 해제 · 기준 GF를 재등록하세요.');update()}
  function save(){if(!validBase()||quality()!=='안정')return;const v=median(recent().map(x=>x.value));const derived=measureCompare(baseline.value,v);if(!derived)return;
   const row={time:new Date().toISOString(),product:$('testId').value.trim()||'GF '+String(history.length+1).padStart(3,'0'),base:baseline.value,test:v,ratio:derived.ratio,drop:derived.drop,cv:variation().cv,dark:validDark()?dark.value:null,mode:locked?'노출 고정':'노출 미고정'};
   history.unshift(row);history=history.slice(0,300);persist();showConfirmed(row);renderRecords();setMessage(row.product+' 등록 완료 · 기준 대비 감소율 '+pct(row.drop));$('testId').value='';
@@ -170,7 +216,7 @@
  function renderRecords(){$('count').textContent=history.length+'건';$('records').innerHTML=history.length?history.slice(0,8).map(r=>`<div class="rec"><div class="name">${escapeHtml(r.product)}<span class="detail">${escapeHtml(new Date(r.time).toLocaleString('ko-KR'))}</span></div><div class="ratio">${pct(Number(r.ratio))}</div><div class="drop">${r.drop<0?pct(-Number(r.drop))+' 증가':pct(Number(r.drop))+' 감소'}</div></div>`).join(''):'<div class="empty">저장된 측정값이 없습니다.</div>';$('csv').disabled=!history.length;$('erase').disabled=!history.length}
  function csvCell(value){let s=String(value??'');if(/^[=+@\-\t\r]/.test(s))s="'"+s;return '"'+s.replaceAll('"','""')+'"'}
  function exportCsv(){if(!history.length)return;const keys=['time','product','base','test','ratio','drop','cv','dark','mode'];const labels=['시간','실제 GF','기준 샘플 신호','실제 GF 신호','상대 투과 신호(%)','기준 대비 감소율(%)','시간변동 CV(%)','암신호 (빈칸=미보정)','노출 상태'];let rows=[labels.map(csvCell).join(','),...history.map(r=>keys.map(k=>csvCell(r[k])).join(','))];const url=URL.createObjectURL(new Blob(['\ufeff'+rows.join('\r\n')],{type:'text/csv;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='NO6_GF_측정기록_'+new Date().toISOString().slice(0,10)+'.csv';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000)}
- $('start').addEventListener('click',start);$('stop').addEventListener('click',()=>{stop();setMessage('카메라를 켜주세요.')});$('retry').addEventListener('click',lockExposure);$('register').addEventListener('click',register);$('reset').addEventListener('click',reset);$('darkRegister').addEventListener('click',registerDark);$('darkReset').addEventListener('click',resetDark);$('save').addEventListener('click',save);$('csv').addEventListener('click',exportCsv);$('erase').addEventListener('click',()=>{if(!history.length||!confirm('측정 기록을 모두 삭제하시겠습니까?'))return;history=[];persist();renderRecords()});
+ $('start').addEventListener('click',start);$('stop').addEventListener('click',()=>{stop();setMessage('카메라를 켜주세요.')});$('retry').addEventListener('click',lockExposure);$('register').addEventListener('click',register);$('reset').addEventListener('click',reset);$('darkRegister').addEventListener('click',registerDark);$('darkReset').addEventListener('click',resetDark);$('save').addEventListener('click',save);for(const [id,type] of [['pairFresh','fresh'],['pairFreshRef','freshRef'],['pairUsed','used'],['pairUsedRef','usedRef']])$(id).addEventListener('click',()=>capturePair(type));$('pairReset').addEventListener('click',()=>{pairReset();$('pairMessage').textContent='비교 초기화 · 기준 GF 유지 후 신액부터 다시 측정하세요.'});$('csv').addEventListener('click',exportCsv);$('erase').addEventListener('click',()=>{if(!history.length||!confirm('측정 기록을 모두 삭제하시겠습니까?'))return;history=[];persist();renderRecords()});
  window.addEventListener('pagehide',()=>{if(stream)stream.getTracks().forEach(t=>t.stop())});
  renderRecords();update();
 })();
