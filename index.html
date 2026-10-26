@@ -1,191 +1,157 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#092C34">
-<title>NO.6 GF 고정형 실시간 투과 비교계</title>
+<meta name="theme-color" content="#0b383a">
+<title>NO.6 GF 투과 비교계</title>
 <style>
-:root{--ink:#16343d;--muted:#617b82;--navy:#092c34;--teal:#087d73;--teal-dark:#06655e;--mint:#e3f5ee;--bg:#f1f6f6;--line:#d7e5e6;--danger:#a94242;--amber:#946019;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Malgun Gothic",sans-serif;color:var(--ink);background:var(--bg);font-synthesis:none}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0}button,input,select{font:inherit}button{cursor:pointer;touch-action:manipulation}button:disabled{cursor:not-allowed;opacity:.46}.hidden{display:none!important}
-header{background:linear-gradient(115deg,#081f2a,#11555c);color:#fff;padding:23px max(16px,calc((100vw - 1060px)/2)) 27px}header .eyebrow{color:#9de7d7;font-size:11px;font-weight:850;letter-spacing:1.4px}h1{margin:9px 0;font-size:clamp(23px,5.1vw,34px);letter-spacing:-.85px;line-height:1.3}header p{font-size:12px;color:#cee6e9;line-height:1.8;margin:0}
-main{max-width:1090px;margin:auto;padding:12px 12px 35px}.layout{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:12px;align-items:start}.panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:0 5px 20px #12363e07}.panel h2{margin:0;font-size:17px;letter-spacing:-.35px}.panel .top{display:flex;gap:8px;justify-content:space-between;align-items:center;margin-bottom:13px;flex-wrap:wrap}.span{grid-column:1/-1}
-.pill{display:inline-flex;align-items:center;gap:5px;border-radius:100px;padding:6px 10px;background:#e5f4ef;color:#08766c;font-size:11px;font-weight:800}.pill.warn{background:#fff2d8;color:#986014}.pill.bad{background:#ffe8e6;color:#a03939}.pill.off{background:#edf2f3;color:#60777b}.btn{border:1px solid #cbdedd;border-radius:10px;background:white;color:#284f57;font-size:12px;font-weight:800;padding:10px 12px;min-height:43px}.btn.primary{background:var(--teal);border-color:var(--teal);color:#fff}.btn.navy{background:#164858;border-color:#164858;color:#fff}.btn.light{background:#e8f6f1;color:#056f66;border-color:#c6e7dc}.btn.red{color:#a64a47;border-color:#edd2cc}.btnrow{display:flex;gap:8px;flex-wrap:wrap}.btnrow .btn{flex:1 1 auto}.buttonfull{width:100%}
-.hint,.fine{font-size:11.5px;color:#5b777e;line-height:1.75;margin:9px 0}.fine{font-size:11px}.field{margin-bottom:10px}.field label,.label{display:block;font-size:11px;color:#4a6870;font-weight:800;margin-bottom:5px}.field input,.field select{width:100%;border:1px solid #d6e3e4;border-radius:9px;height:41px;padding:9px 11px;color:var(--ink);background:white;font-size:12px}.field input:focus,.field select:focus{outline:2px solid #b9e4d8;outline-offset:1px}.fields{display:grid;grid-template-columns:1fr 1fr;gap:0 9px}.check{display:flex;align-items:flex-start;gap:9px;background:#f1f8f7;border:1px solid #d9e8e7;border-radius:11px;padding:10px 11px;color:#3e6267;font-size:12px;line-height:1.6}.check input{margin:2px 0 0;accent-color:var(--teal);width:19px;height:19px;flex-shrink:0}.divider{border-top:1px solid #e8eeee;margin:15px 0}.status{padding:9px 10px;background:#f1f6f7;border:1px solid #deeaeb;border-radius:9px;font-size:11.5px;color:#4b6971;line-height:1.7;margin:9px 0}.status.warn{background:#fff8e9;border-color:#f1e1ba;color:#895c19}.status.bad{background:#fff0ed;border-color:#f5d5ca;color:#9b4141}.status.good{background:#ecfaf1;border-color:#cae8d3;color:#15715c}.status b{color:inherit}
-.fixture{display:grid;grid-template-columns:1fr 1fr;gap:9px;align-items:stretch}.figure{border-radius:12px;background:#0a2731;color:#d3eeef;position:relative;min-height:179px;padding:8px;overflow:hidden}.stack{display:flex;flex-direction:column;gap:4px;align-items:center;margin-top:5px}.beam{position:absolute;left:50%;top:50px;transform:translateX(-50%);height:95px;width:10px;background:linear-gradient(to bottom,#fff3b2aa,#fee68d0a);filter:blur(5px);pointer-events:none}.layer{z-index:1;position:relative;border-radius:5px;width:80%;text-align:center;font-size:10.5px;font-weight:800;padding:5px 4px}.lamp{width:72%;background:#ffdf91;color:#75521d}.diffuse{width:76%;background:#f0efe8;color:#617171}.gf{width:77%;background:#9bcabf;color:#154a46;border:1px dashed #d8f6ea}.protect{width:84%;background:#b9daf4;color:#155269}.lens{width:79%;background:#26647a;border:1px solid #79c5d4;color:#fff}.arrows{height:4px;font-size:11px;color:#f7dc96;line-height:4px}.figure small{display:block;text-align:center;color:#b9dadd;font-size:10px;margin-top:8px}
-.figuretext{font-size:11px;line-height:1.8;color:#55747a}.figuretext strong{color:#184c51}.risk{padding:10px;background:#fff8e8;border:1px solid #f1dfbc;border-radius:10px;font-size:11px;line-height:1.65;color:#8c6222;margin-top:9px}
-.preview{aspect-ratio:16/9;position:relative;overflow:hidden;border-radius:13px;background:#092027}.preview video{width:100%;height:100%;object-fit:contain;display:block;transform:scaleX(-1)}.placeholder{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:7px;color:#d5ebe9;background:radial-gradient(#20515b,#091923);font-size:12px;text-align:center;padding:14px}.placeholder b{font-size:20px}.previewHead{z-index:3;position:absolute;top:8px;left:8px;right:8px;display:flex;justify-content:space-between;gap:5px;pointer-events:none}.previewHead span{background:#021c22cc;color:#fff;border-radius:7px;padding:5px 7px;font-size:10px;font-weight:800;white-space:nowrap}.target{z-index:2;position:absolute;width:19%;aspect-ratio:1;border:2px solid #a2ffe4;border-radius:100%;left:50%;top:50%;transform:translate(-50%,-50%);box-shadow:0 0 0 999px #0c1c1d1c,0 0 0 5px #75eaca24;pointer-events:none}.target:after{content:'+';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#f8fff9;font-size:14px}.targetlabel{position:absolute;bottom:8px;left:8px;right:8px;background:#03232ad0;color:#e9fffa;font-size:10px;line-height:1.5;border-radius:6px;padding:5px 8px;text-align:center;pointer-events:none}
-.metrics{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}.metric{background:#f2f8f8;border:1px solid #dce9e8;border-radius:11px;padding:11px}.metric.main{background:#e6f8f0;border-color:#a8dec8}.metric small{display:block;font-size:11px;color:#668188;font-weight:800}.metric b{display:block;font-size:29px;line-height:1.3;margin-top:5px;font-variant-numeric:tabular-nums;letter-spacing:-.7px}.metric.main b{color:#087e68}.metric em{font-style:normal;font-size:10px;color:#799095}.metric.wide{grid-column:1/-1}
-.progress{background:#e6eff0;height:9px;border-radius:20px;overflow:hidden}.progress div{width:0;background:linear-gradient(90deg,#62d9ba,#087e74);height:100%;transition:width .1s}.timeseries{height:75px;background:#f6faf9;border:1px solid #e6eeee;border-radius:10px;width:100%;display:block;margin:9px 0 4px}.warnlist{background:#fff8e8;border-left:3px solid #c28a28;color:#87601e;font-size:11.5px;line-height:1.75;border-radius:8px;padding:8px 10px;margin-top:8px}.warnlist.good{background:#edf9f3;color:#166e5c;border-color:#47a98d}
-.camproperties{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin:9px 0}.camproperty{border:1px solid #e0e9ea;border-radius:9px;padding:9px;background:#f9fbfb}.camproperty small{display:block;color:#769197;font-size:10px}.camproperty b{font-size:11px;display:block;margin-top:5px}.camproperty b.good{color:#078469}.camproperty b.bad{color:#a85c26}.camerange{display:grid;grid-template-columns:1fr auto;align-items:center;gap:6px;font-size:11px;color:#526e73;margin:9px 0}.camerange input{grid-column:1/-1;width:100%;accent-color:#11887d}.camerange strong{color:#184a4e;font-size:11px}
-.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0 0 12px}.step{padding:10px 4px;border:1px solid #e2eaea;border-radius:10px;text-align:center;color:#729095;font-size:11px;font-weight:800;background:#f8fbfb}.step.on{background:#e1f6ed;border-color:#92d9bb;color:#087461}.ref{background:#eaf8f1;border:1px solid #cce9da;border-radius:10px;padding:10px;margin:10px 0}.ref .topref{display:flex;justify-content:space-between;align-items:center;gap:6px}.ref small{color:#567b71;font-size:10px}.ref b{font-size:20px;letter-spacing:-.3px;font-variant-numeric:tabular-nums}.ref p{font-size:11px;line-height:1.6;margin:5px 0;color:#48756b}.mark{font-weight:800;color:#0b766e}.record{overflow:auto}.record table{border-collapse:collapse;font-size:11px;min-width:880px;width:100%;white-space:nowrap}.record th{background:#edf5f5;color:#587b82}.record th,.record td{padding:9px 8px;text-align:center;border-bottom:1px solid #e3ebeb}.record td:first-child{text-align:left}.record .good{color:#087968;font-weight:900}
-.note{font-size:11px;color:#6e888e;line-height:1.8}footer{margin:16px 0;text-align:center;font-size:11px;color:#7c9295;line-height:1.8}
-@media(max-width:820px){.layout{grid-template-columns:1fr}.span{grid-column:1}.panel{padding:13px}.fixture{grid-template-columns:1fr 1fr}.figure{min-height:165px}header{padding:19px 15px 22px}}
-@media(max-width:380px){main{padding:8px 7px 30px}.panel{padding:12px}.fixture{grid-template-columns:1fr}.figure{min-height:170px}.fields{grid-template-columns:1fr 1fr}.metric b{font-size:25px}.btn{padding:9px 7px}.previewHead span{font-size:9px}.step{font-size:10px}}
+:root{color-scheme:light;--bg:#f4f7f7;--paper:#fff;--ink:#163337;--sub:#687f84;--line:#dfebeb;--accent:#08796d;--accent2:#eaf7f3;--warn:#9e601b;--warnbg:#fff6e6;--err:#9e4242;--errbg:#fff0ed;font-family:system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink)}button,input{font:inherit}button{cursor:pointer;touch-action:manipulation}button:disabled{opacity:.45;cursor:not-allowed}h1,h2,p{margin:0}main{width:min(100%,680px);margin:auto;padding:15px 13px 40px;display:grid;gap:12px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:10px;min-height:46px}.topbar h1{font-size:20px;letter-spacing:-.5px}.badge{border-radius:99px;background:#e7efef;color:#527075;font-size:11px;font-weight:750;padding:7px 11px;white-space:nowrap}.badge.good{background:#e5f6ec;color:#08745d}.badge.warn{background:var(--warnbg);color:var(--warn)}
+.card{background:var(--paper);border-radius:15px;border:1px solid var(--line);padding:13px;box-shadow:0 3px 12px #1d515009}.head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}.head h2{font-size:14px;font-weight:800}.small{font-size:11px;color:var(--sub)}.buttons{display:flex;gap:8px;flex-wrap:wrap}button{border:1px solid #d0dddd;background:white;color:#315c60;border-radius:11px;padding:11px 12px;font-size:13px;font-weight:800;min-height:43px}.primary{background:var(--accent);border-color:var(--accent);color:white}.buttons button{flex:1}.mini{min-height:35px;font-size:11px;padding:7px 10px}.light{background:var(--accent2);border-color:#d4ebe3;color:#087166}.danger{color:var(--err)}
+.preview{height:clamp(148px,42vw,244px);position:relative;overflow:hidden;background:#102e32;border-radius:12px;display:flex;align-items:center;justify-content:center}.preview video{width:100%;height:100%;display:block;object-fit:contain;transform:scaleX(-1)}.placeholder{position:absolute;inset:0;display:grid;place-content:center;text-align:center;color:#cfe5e4;background:#17383f;font-size:12px;font-weight:600}.preview.live .placeholder{display:none}.aim{pointer-events:none;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:24%;aspect-ratio:1;border:2px solid #b1ffe6;border-radius:50%;box-shadow:0 0 0 5px #a7fff32a}.aim:before,.aim:after{content:"";position:absolute;background:#aafde8;left:50%;top:50%;transform:translate(-50%,-50%)}.aim:before{width:14px;height:1px}.aim:after{height:14px;width:1px}.preview:not(.live) .aim{display:none}.cameraButtons{margin-top:10px}.cameraButtons #stop{flex:0 0 auto}.cameraButtons #retry{flex:0 0 auto}
+.indicators{display:flex;align-items:center;gap:7px;margin-top:10px;flex-wrap:wrap}.indicator{font-size:11px;color:#688084;background:#f1f6f6;border:1px solid #e5eeee;border-radius:7px;padding:6px 9px;font-weight:700}.indicator.good{color:#137a68;background:#eaf8f1}.indicator.warn{color:var(--warn);background:var(--warnbg)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.metric{border:1px solid #e0eaea;background:#f6f9f9;border-radius:12px;padding:12px}.metric.accent{border-color:#b5e4d4;background:#eaf8f2}.metric span{display:block;color:#647e83;font-size:11px;font-weight:700}.metric strong{display:block;font-size:clamp(27px,8vw,37px);line-height:1.23;letter-spacing:-1px;margin-top:6px;font-variant-numeric:tabular-nums;white-space:nowrap}.metric.accent strong{color:#057760}.bar{margin-top:11px;background:#e8f0ef;border-radius:9px;overflow:hidden;height:7px}.bar>div{width:0;height:100%;background:#0a9079;transition:width .17s ease}
+.label{display:block;font-size:11px;font-weight:750;color:#617e82;margin-bottom:6px}input[type=text]{width:100%;height:43px;border:1px solid #d7e4e3;border-radius:10px;padding:10px 12px;color:var(--ink);font-size:13px;outline:none}input[type=text]:focus{border-color:#65b3a1;box-shadow:0 0 0 2px #a3e4d641}.full{width:100%}.split{display:grid;grid-template-columns:1fr auto;gap:8px}.fields{margin:11px 0 10px}.message{font-size:12px;line-height:1.45;padding:10px 11px;color:#3f706c;background:#eff8f5;border-radius:9px;margin-top:10px;min-height:38px}.message.warn{color:var(--warn);background:var(--warnbg)}.message.bad{color:var(--err);background:var(--errbg)}
+.recordActions{display:flex;gap:8px}.records{display:grid;gap:0}.rec{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:10px;align-items:center;padding:11px 2px;border-top:1px solid #edf1f1;font-size:12px}.rec:first-child{border-top:0}.rec .name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:750}.rec .detail{display:block;font-size:10px;color:#789095;margin-top:4px;font-weight:500}.rec .ratio{font-size:11px;color:#697f83;font-variant-numeric:tabular-nums}.rec .drop{font-weight:850;color:#137963;font-variant-numeric:tabular-nums;min-width:65px;text-align:right}.empty{font-size:12px;color:#8aa0a3;text-align:center;padding:17px 0}footer{text-align:center;font-size:10px;color:#809499;padding-top:2px}
+@media(max-width:380px){main{padding:10px 8px 26px;gap:9px}.card{padding:11px}.topbar h1{font-size:18px}.cameraButtons{gap:5px}.cameraButtons button{font-size:11px;padding:8px}.metric{padding:11px}.metric strong{font-size:28px}.preview{height:160px}}
 </style>
 </head>
 <body>
-<header>
- <div class="eyebrow">COTEC / NO.6 · GF TRANSMISSION TEST</div>
- <h1>GF 고정형 실시간 투과 비교계</h1>
- <p>전면 카메라 + GF 시편 + 외부 후레시 │ <b>기준 샘플 등록 → 테스트품 순차 측정</b><br>실시간 상대 투과 신호 측정용 · Lux, 절대 투과율 또는 식각 깊이 측정기가 아닙니다.</p>
-</header>
 <main>
-<div class="steps"><div class="step on" id="step1">① 카메라·지그</div><div class="step" id="step2">② 기준 샘플</div><div class="step" id="step3">③ 실시간 비교</div></div>
-<div class="layout">
-<section class="panel span">
- <div class="top"><h2>01. 고정 측정 구조</h2><span class="pill">전면 카메라 전용</span></div>
- <div class="fixture">
-  <div class="figure" role="img" aria-label="상부 외부 LED 후레시, 확산판, GF 시편, 투명 보호막, 전면 카메라 순으로 광원이 관통하는 구조">
-   <div class="beam"></div><div class="stack"><div class="layer lamp">외부 후레시 · LED ↓</div><div class="arrows">↓</div><div class="layer diffuse">확산판 · 동일 조건</div><div class="layer gf">GF 시편 · 일정 압착</div><div class="layer protect">투명 보호막 · 동일 조건</div><div class="arrows">↓</div><div class="layer lens">스마트폰 전면 카메라</div></div><small>위 → 아래 투과광 측정</small>
+ <header class="topbar"><h1>NO.6 · GF 투과 비교</h1><span id="cameraBadge" class="badge">카메라 OFF</span></header>
+ <section class="card">
+  <div class="preview" id="preview"><video id="video" autoplay muted playsinline></video><div class="placeholder">전면 카메라</div><div class="aim" aria-hidden="true"></div></div>
+  <div class="buttons cameraButtons"><button id="start" class="primary">카메라 켜기</button><button id="retry" class="mini" hidden disabled>노출 재고정</button><button id="stop" class="mini" hidden disabled>카메라 끄기</button></div>
+  <div class="indicators"><span class="indicator" id="exposureState">노출 확인 전</span><span class="indicator" id="stabilityState">안정도 —</span></div>
+ </section>
+ <section class="card">
+  <div class="grid">
+   <div class="metric"><span>현재 신호</span><strong id="live">—</strong></div>
+   <div class="metric"><span>기준 샘플</span><strong id="base">—</strong></div>
+   <div class="metric"><span>기준 대비 비율</span><strong id="ratio">—</strong></div>
+   <div class="metric accent"><span>감소율</span><strong id="decrease">—</strong></div>
   </div>
-  <div class="figuretext"><strong>측정할 때 고정할 항목</strong><br>① 동일 후레시와 밝기 단계<br>② GF와 카메라의 중심 정렬<br>③ 압착 하중·시편 면적·높이<br>④ 확산판과 보호막의 종류<br>⑤ 화면 밝기 최소·외광 차단<br>⑥ 전면 카메라 ISO·노출(지원 시 고정)</div>
- </div>
- <div class="risk"><b>화면 파손 주의:</b> 후레시 자중이 GF를 누르더라도 그 하중을 전면 카메라 유리나 화면에 직접 집중시키지 마세요. 지그의 지지 링/스페이서가 하중을 받도록 구성하고, 시편은 세척·건조 후 보호막 위에서 측정하세요. 조명 세기 및 압착이 일정해도 카메라 영상처리 오차는 남습니다.</div>
- <div class="divider"></div>
- <div class="fields">
-  <div class="field"><label for="fixtureId">지그 / 후레시 ID</label><input id="fixtureId" placeholder="예: GF-JIG-01" value="GF-JIG-01"></div>
-  <div class="field"><label for="lampMode">후레시 밝기 단계</label><input id="lampMode" placeholder="예: 고정 1단" value="고정 1단"></div>
-  <div class="field"><label for="mass">후레시 하중 (g) · 기록용</label><input id="mass" inputmode="decimal" type="number" min="0" step="1" placeholder="예: 180"></div>
-  <div class="field"><label for="spacer">스페이서 / 간격 (mm)</label><input id="spacer" inputmode="decimal" type="number" min="0" step="0.1" placeholder="예: 3.0"></div>
- </div>
- <label class="check"><input id="fixtureCheck" type="checkbox"><span><b>지그 고정 확인</b> — GF 위치·후레시 전력·압착 구조·보호막을 샘플과 테스트품에서 동일하게 유지했습니다.</span></label>
-</section>
-<section class="panel">
- <div class="top"><h2>02. 전면 카메라 실시간 신호</h2><span class="pill off" id="camBadge">연결 대기</span></div>
- <div class="btnrow"><button class="btn primary" id="startBtn">전면 카메라 시작</button><button class="btn" id="lockBtn" disabled>노출·색 고정 시도</button><button class="btn" id="stopBtn" disabled>종료</button></div>
- <div class="preview" style="margin-top:10px"><video id="video" playsinline autoplay muted></video><div class="placeholder" id="placeholder"><b>◉</b><strong>전면 카메라 대기 중</strong><span>외부 후레시를 켠 뒤 카메라를 시작하세요.<br>카메라는 HTTPS 접속이 필요합니다.</span></div><div class="previewHead"><span id="videoStatus">● LIVE 대기</span><span id="videoSignal">신호 없음</span></div><div class="target" id="target"></div><div class="targetlabel" id="targetText">중앙 측정 영역 · GF와 광원을 카메라 렌즈 위에 정렬하세요</div></div>
- <div class="metrics">
-  <div class="metric main"><small>현재 투과 신호 · 실시간</small><b id="liveValue">—</b><em>보정 영상 밝기 지수 (0~100)</em></div>
-  <div class="metric"><small>등록된 기준 샘플</small><b id="baseValue">—</b><em id="baseDesc">샘플 미등록</em></div>
-  <div class="metric"><small>상대 투과 신호</small><b id="ratio">—</b><em>테스트 ÷ 기준 × 100%</em></div>
-  <div class="metric"><small>기준 대비 신호 감소율</small><b id="drop">—</b><em>감소 양수 / 증가 음수</em></div>
- </div>
- <div class="progress"><div id="ratioBar"></div></div>
- <div class="hint" id="summary">기준 샘플을 등록하면 실시간으로 상대 신호가 표시됩니다.</div>
- <canvas id="chart" class="timeseries" width="600" height="125" aria-label="최근 카메라 신호 추이"></canvas>
- <div class="status" id="stability">안정도: 카메라 대기 중</div>
- <div class="warnlist" id="warnings">카메라 자동 노출을 확인한 뒤 기준 샘플을 등록하세요.</div>
- <div class="fine" id="stateLine" aria-live="polite">진행 상태: 대기 중</div>
-</section>
-<section class="panel">
- <div class="top"><h2>03. 카메라 고정 및 교정</h2><span class="pill off" id="lockBadge">미확인</span></div>
- <div class="camproperties">
-  <div class="camproperty"><small>노출 제어 상태</small><b id="exposureStatus">미확인</b></div>
-  <div class="camproperty"><small>화이트밸런스</small><b id="wbStatus">미확인</b></div>
-  <div class="camproperty"><small>ISO / 노출시간</small><b id="cameraSettings">—</b></div>
-  <div class="camproperty"><small>카메라 실제 방향</small><b id="directionStatus">대기 중</b></div>
- </div>
- <div class="camerange hidden" id="exposureRangeWrap"><span>노출시간 수동 설정 (API 원시 단위)</span><strong id="exposureRangeText">—</strong><input id="exposureRange" type="range" min="1" max="100" value="50" step="1"></div>
- <div class="camerange hidden" id="isoRangeWrap"><span>ISO 수동 설정</span><strong id="isoRangeText">—</strong><input id="isoRange" type="range" min="1" max="100" value="50" step="1"></div>
- <div class="btnrow"><button class="btn light" id="applyManual" type="button" disabled>선택 노출 값 적용</button><button class="btn light" id="refreshSettings" type="button" disabled>설정 상태 확인</button></div>
- <p class="fine"><b>실제 고정 성공 여부는 카메라가 보고하는 설정값으로 판정</b>합니다. 웹브라우저가 수동 노출을 지원하지 않으면 ‘미지원’으로 표시되며 자동 노출을 강제로 고정했다고 표시하지 않습니다. 영상의 수학적 보정만으로 자동 노출을 제거할 수 없습니다.</p>
- <div class="divider"></div>
- <div class="top"><strong style="font-size:13px">선택 교정 · 암신호 / 빈 광원</strong><span class="pill off" id="calBadge">선택 기능</span></div>
- <p class="hint">노출이 실제 고정된 기기에서는 외부 후레시를 끈 상태의 <b>암신호</b>를 먼저 등록할 수 있습니다. 다시 후레시를 켜고 GF를 제거한 <b>빈 광원</b> 상태를 측정해 포화를 확인하세요.</p>
- <div class="btnrow"><button class="btn" type="button" id="darkBtn" disabled>후레시 OFF · 암신호 등록</button><button class="btn" type="button" id="openBtn" disabled>GF 제외 · 빈 광원 등록</button></div>
- <div class="camproperties">
-  <div class="camproperty"><small>암신호</small><b id="darkValue">미등록</b></div>
-  <div class="camproperty"><small>빈 광원</small><b id="openValue">미등록</b></div>
- </div>
- <div class="field"><label for="roiRange">중앙 측정 영역 크기 <span id="roiLabel">12%</span></label><input id="roiRange" type="range" min="5" max="28" step="1" value="12" style="width:100%;accent-color:#087d73"></div>
- <div class="field"><label for="stabilityLimit">등록 허용 변동계수(CV)</label><select id="stabilityLimit"><option value="1">1% 이내 (엄격)</option><option value="2" selected>2% 이내 (권장 시작값)</option><option value="3">3% 이내</option><option value="5">5% 이내 (탐색)</option></select></div>
-</section>
-<section class="panel span">
- <div class="top"><h2>04. 샘플 등록 → 테스트품 측정</h2><span class="pill off" id="phaseBadge">샘플 미등록</span></div>
- <div class="fields">
-  <div class="field"><label for="sampleName">기준 GF 샘플 / LOT</label><input id="sampleName" value="기준 GF" autocomplete="off"></div>
-  <div class="field"><label for="testName">테스트 GF / LOT</label><input id="testName" placeholder="예: NO6-TEST-01" autocomplete="off"></div>
-  <div class="field"><label for="location">측정 장소</label><input id="location" placeholder="예: 은도금 라인" autocomplete="off"></div>
-  <div class="field"><label for="treatment">NO.6 처리시간 (분)</label><input id="treatment" type="number" min="0" step="0.1" placeholder="선택 입력"></div>
- </div>
- <p class="hint"><b>①</b> 외부 후레시 ON → 화면을 확인하여 노출·광량을 안정화하세요. <b>②</b> 기준 GF를 놓고 등록하세요. <b>③</b> 기준 GF를 제거하고 테스트 GF를 넣으면 수치가 자동 갱신됩니다.</p>
- <button class="btn primary buttonfull" type="button" id="saveSample" disabled>기준 GF 샘플 등록</button>
- <div class="ref"><div class="topref"><span class="mark" id="sampleTitle">등록된 기준 없음</span><b id="savedValue">—</b></div><p id="sampleInfo">저장된 기준 샘플은 앱 재실행 시 조회할 수 있지만, 카메라 재시작·설정 변경 시 비교 기준으로 재사용하지 않고 새로 등록해야 합니다.</p></div>
- <div class="btnrow"><button class="btn navy" type="button" id="saveTest" disabled>현재 테스트품 값 기록</button><button class="btn" type="button" id="resetSample">기준 샘플 초기화</button></div>
- <div class="status" id="evalStatus">측정값은 상대 영상 신호입니다. NO.6 식각량이나 식각속도는 별도로 검증해야 합니다.</div>
-</section>
-<section class="panel span">
- <div class="top"><h2>05. 측정 기록</h2><span class="pill off" id="count">0건</span></div>
- <div class="btnrow" style="margin-bottom:8px"><button class="btn light" id="export" type="button">측정 이력 CSV 저장</button><button class="btn red" id="clear" type="button">이력 전체 삭제</button></div>
- <div class="record" id="history"><div class="fine">아직 측정 기록이 없습니다.</div></div>
-</section>
-<section class="panel span"><h2>측정 결과 해석</h2><div class="hint">카메라 영상의 중앙 부분에서 RGB를 광량에 가깝게 변환해 평균한 값을 사용합니다. 동일한 촬영 조건에서 <b>(테스트 신호 − 암신호) / (기준 신호 − 암신호) × 100</b>을 계산합니다. 암신호 미등록 시 0으로 간주합니다. 이 계산은 기기의 자동 영상처리, 색 의존성 및 산란 효과를 보정하지 못하며, <b>실제 투과율이나 NO.6의 식각량과 동일하지 않습니다.</b> 장소가 바뀌어도 후레시·지그가 일정하면 상대 비교에 유리하지만, 매 측정 세션 기준 GF를 재등록하는 것을 권장합니다.</div></section>
-</div>
-<footer>NO.6 / GF Optical Signal Comparator · 2026 │ 시제품 · 카메라 원시광학센서가 아닌 처리 영상 기반</footer>
+  <div class="bar"><div id="ratioBar"></div></div>
+  <div id="message" class="message" role="status" aria-live="polite">카메라를 켜주세요.</div>
+ </section>
+ <section class="card">
+  <div class="head"><h2>기준 샘플</h2><span id="sampleBadge" class="small">미등록</span></div>
+  <div class="split"><button id="register" class="primary" disabled>기준 샘플 등록</button><button id="reset" class="mini" disabled>초기화</button></div>
+ </section>
+ <section class="card">
+  <div class="head"><h2>테스트품</h2><span id="testStatus" class="small">기준 등록 필요</span></div>
+  <label class="label" for="testId">제품 번호 (선택)</label><input type="text" id="testId" placeholder="예: NO6-001" autocomplete="off" maxlength="60">
+  <div class="fields"><button id="save" class="primary full" disabled>현재 측정값 저장</button></div>
+ </section>
+ <section class="card">
+  <div class="head"><h2>측정 기록 <span id="count" class="small">0건</span></h2><div class="recordActions"><button id="csv" class="mini light">CSV 저장</button><button id="erase" class="mini danger">삭제</button></div></div>
+  <div class="records" id="records"></div>
+ </section>
+ <footer>상대 영상 신호 · Lux / 실제 식각량 아님</footer>
 </main>
 <canvas id="frame" width="320" height="240" hidden></canvas>
 <script>
-(()=>{'use strict';
-const $=id=>document.getElementById(id);
-const video=$('video'),frame=$('frame'),ctx=frame.getContext('2d',{willReadFrequently:true});
-const BASEKEY='no6_gf_front_sample_v4',ROWKEY='no6_gf_front_history_v4';
-const W=320,H=240;
-let stream=null,track=null,raf=null,isRunning=false,session=0,live=null,lastTick=0,lastSettingsCheck=0,reads=[],historySeries=[],baseline=null,dark=null,openLight=null,caps={},camSettings={},lock={exposure:false,white:false,expMode:'unverified',whiteMode:'unverified'},history=[];
-const num=v=>Number.isFinite(v)?v.toFixed(2):'—';const fmt=v=>Number.isFinite(v)?v.toFixed(1):'—';
-function load(key,def){try{return JSON.parse(localStorage.getItem(key)||'null')??def}catch{return def}}
-function persist(key,val){try{localStorage.setItem(key,JSON.stringify(val));return true}catch{return false}}
-function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
-const savedLast=load(BASEKEY,null);baseline=savedLast;history=load(ROWKEY,[]);if(!Array.isArray(history))history=[];
-if(history.length===0){let old=load('no6_silica_live_history_v2',[]);if(Array.isArray(old)&&old.length){history=old.map(r=>({...r,legacy:true,mode:'이전 앱 / 비교 주의'}));persist(ROWKEY,history)}}
-function status(msg){$('stateLine').textContent='진행 상태: '+msg}
-function pill(id,msg,type='off'){const el=$(id);el.textContent=msg;el.className='pill '+type}
-function setNote(id,msg,type=''){const el=$(id);el.textContent=msg;el.className='status '+type}
-function settingHash(){return JSON.stringify({fixture:$('fixtureId').value.trim(),mode:$('lampMode').value.trim(),mass:$('mass').value.trim(),gap:$('spacer').value.trim(),roi:+$('roiRange').value,exposure:lock.exposure?(camSettings.exposureTime??'?'):'AUTO',iso:lock.exposure?(camSettings.iso??'?'):'AUTO',expMode:camSettings.exposureMode??'?',wb:camSettings.whiteBalanceMode??'?',temp:lock.white?(camSettings.colorTemperature??'?'):'AUTO',device:camSettings.deviceId??''})}
-function validBaseline(){return Boolean(isRunning&&baseline&&baseline.session===session&&baseline.hash===settingHash()&&baseline.sensor==='front')}
-function cleanLabel(){return !lock.exposure?'탐색용 · 노출 미고정':lock.white?'노출·색 확인 고정':'부분 고정 · 화이트밸런스 미확인'}
-function isFresh(){return Boolean(isRunning&&live&&Date.now()-live.when<1200)}
-function med(v){let a=[...v].sort((x,y)=>x-y);return a.length?a.length%2?a[(a.length-1)/2]:(a[a.length/2-1]+a[a.length/2])/2:NaN}
-function stats(){const vals=reads.filter(r=>Date.now()-r.when<2800&&Number.isFinite(r.value)).slice(-15).map(r=>r.value);let mean=vals.reduce((a,b)=>a+b,0)/(vals.length||1);let std=Math.sqrt(vals.reduce((a,b)=>a+(b-mean)**2,0)/(vals.length||1));return {n:vals.length,cv:mean>0?std/mean*100:Infinity,mean,median:med(vals)}}
-function goodFrame(){return isFresh()&&live.value>=.3&&live.value<97&&live.clip<.008&&live.black<.3&&live.spatialCV<.55}
-function stable(){let s=stats();return s.n>=9&&s.cv<=Number($('stabilityLimit').value)}
-function recentMedian(kind){const a=reads.filter(r=>Date.now()-r.when<2700 && r.clip<.008&&Number.isFinite(r.value));if(a.length<9)throw Error('영상이 아직 안정되지 않았습니다. 후레시/시편을 고정한 채 2초 이상 유지하세요.');const vals=a.slice(-15).map(x=>x.value);const result=med(vals);if(kind==='dark'&&result>=20)throw Error('암신호가 너무 밝습니다. 후레시 OFF 상태인지 확인하세요.');if(kind!=='dark'&&(!goodFrame()||!stable()))throw Error('밝기 포화·불균일 또는 시간 변동이 큽니다. 위치와 광량을 조정하세요.');return result}
-function linear(ch){const x=ch/255;return x<=.04045?x/12.92:((x+.055)/1.055)**2.4}
-function readFrame(){if(video.readyState<2||!video.videoWidth)throw Error('카메라 준비 대기');let vw=video.videoWidth,vh=video.videoHeight,ratio=Math.min(W/vw,H/vh),nw=vw*ratio,nh=vh*ratio;ctx.clearRect(0,0,W,H);ctx.drawImage(video,(W-nw)/2,(H-nh)/2,nw,nh);const radius=Math.round(Math.min(W,H)*Number($('roiRange').value)/100),cx=Math.round(W/2),cy=Math.round(H/2),x0=cx-radius,y0=cy-radius,d=2*radius;
-const data=ctx.getImageData(x0,y0,d,d).data;let a=0,b=0,n=0,clip=0,black=0;for(let y=0;y<d;y+=2){for(let x=0;x<d;x+=2){if((x-radius)**2+(y-radius)**2>radius**2)continue;let i=(y*d+x)*4,R=data[i],G=data[i+1],B=data[i+2];let v=(.2126*linear(R)+.7152*linear(G)+.0722*linear(B))*100;a+=v;b+=v*v;n++;if(Math.max(R,G,B)>=250)clip++;if(Math.max(R,G,B)<13)black++}}if(!n)throw Error('측정 영역 오류');let value=a/n;return {value,clip:clip/n,black:black/n,spatialCV:Math.sqrt(Math.max(0,b/n-value**2))/Math.max(.001,value),when:Date.now()};}
-function drawChart(){let c=$('chart'),g=c.getContext('2d'),w=c.width,h=c.height;g.clearRect(0,0,w,h);g.strokeStyle='#e0eaea';g.lineWidth=1;for(let y=15;y<h;y+=27){g.beginPath();g.moveTo(0,y);g.lineTo(w,y);g.stroke()}if(historySeries.length<2)return;let min=Math.max(0,Math.min(...historySeries)-3),max=Math.min(100,Math.max(...historySeries)+3);if(max-min<6){min=Math.max(0,(min+max)/2-3);max=Math.min(100,min+6)}g.strokeStyle='#0d8b7e';g.lineWidth=3;g.beginPath();historySeries.forEach((v,i)=>{let x=i/(Math.max(1,historySeries.length-1))*(w-12)+6,y=(h-10)-(v-min)/(max-min)*(h-22);if(i===0)g.moveTo(x,y);else g.lineTo(x,y)});g.stroke()}
-function warningText(){if(!isFresh())return '카메라 시작 후 GF 위에 외부 후레시를 고정하세요.';let w=[];if(live.clip>=.008||live.value>=97)w.push('광량 포화: 후레시 밝기를 낮추거나 확산판 사용');if(live.value<.3||live.black>=.3)w.push('광량 부족: GF 위치·광원 확인');if(live.spatialCV>=.55)w.push('측정 영역 밝기가 불균일: 중심/확산판 확인');if(!stable()){let s=stats();w.push(s.n<9?'안정화 대기: 약 2초 이상 고정':'측정 시간 변동 '+fmt(s.cv)+'% (기준 '+$('stabilityLimit').value+'% 이내)')}
-if(!lock.exposure)w.push('자동 노출 미고정: 기준 대비 수치도 탐색용');if(!lock.white)w.push('화이트밸런스 미고정: 색 변화에 주의');if(!validBaseline()&&baseline)w.push('기준 샘플의 카메라·지그 설정 불일치: 재등록 필요');return w.length?w.join(' / '):'포화·광량 부족·시간 변동 경고 없음 (광학적 절대 정확도 검증은 별도 필요)'}
-function update(){const active=validBaseline(),fresh=isFresh(),val=fresh?live.value:NaN,s=stats();$('liveValue').textContent=num(val);$('baseValue').textContent=active?num(baseline.raw):'—';$('baseDesc').textContent=baseline&&!active?'기준 재등록 필요':active?cleanLabel():'샘플 미등록';let D=dark?.session===session?dark.value:0;let netRef=active?baseline.raw-D:NaN;let netVal=val-D;const comparable=active&&fresh&&netRef>1e-3&&netVal>=0;const ratio=comparable?netVal/netRef*100:NaN,drop=100-ratio;$('ratio').textContent=comparable?fmt(ratio)+'%':'—';$('drop').textContent=comparable?fmt(drop)+'%':'—';$('ratioBar').style.width=comparable?Math.max(0,Math.min(100,ratio))+'%':'0%';$('summary').textContent=comparable?(drop>=0?`기준 대비 ${fmt(drop)}% 감소`:`기준 대비 ${fmt(-drop)}% 증가`):baseline&&!active?'측정 조건이 달라 기준 샘플 재등록 필요':'기준 샘플 등록 후 실시간 비교가 시작됩니다.';
-$('videoSignal').textContent=fresh?'광신호 '+num(val):'신호 없음';$('stability').className='status '+(stable()?'good':'warn');$('stability').textContent=s.n?'측정 안정도 · 최근 '+s.n+'개 프레임 / CV '+fmt(s.cv)+'% · '+(stable()?'안정':'불안정/대기'):'측정 안정도 · 카메라 대기';$('warnings').textContent=warningText();$('warnings').className='warnlist '+(fresh&&goodFrame()&&stable()&&lock.exposure?'good':'');
-const allowed=isRunning&&fresh&&goodFrame()&&stable()&&$('fixtureCheck').checked;
-$('saveSample').disabled=!allowed;$('saveTest').disabled=!(allowed&&comparable);$('darkBtn').disabled=!(isRunning&&lock.exposure&&reads.length>=9);$('openBtn').disabled=!(isRunning&&goodFrame()&&stable());$('resetSample').disabled=!baseline;
-$('sampleTitle').textContent=baseline?baseline.name:'등록된 기준 없음';$('savedValue').textContent=baseline?num(baseline.raw):'—';$('sampleInfo').textContent=baseline?(active?`현재 세션 기준 적용됨 · ${new Date(baseline.time).toLocaleString('ko-KR')} · ${baseline.mode}`:'이전에 등록한 기준이 있습니다. 새 카메라 세션 또는 측정 조건이 달라졌으므로 다시 등록해야 합니다.'):'기준을 등록하려면 지그 고정 확인 후 실시간 신호가 안정되어야 합니다.';
-$('evalStatus').className='status '+(comparable?lock.exposure?'good':'warn':'');$('evalStatus').textContent=comparable?`판정 등급: ${lock.exposure?'조건부 상대 비교':'탐색용(노출 미고정)'} · 상대신호 ${fmt(ratio)}% / 감소율 ${fmt(drop)}%. 이 수치는 식각량이 아닙니다.`:'측정값은 상대 영상 신호입니다. NO.6 식각량이나 식각속도는 별도로 검증해야 합니다.';
-pill('phaseBadge',active?'실시간 비교 활성':baseline?'재등록 필요':'샘플 미등록',active?'':'off');$('step1').classList.toggle('on',!isRunning);$('step2').classList.toggle('on',isRunning&&!active);$('step3').classList.toggle('on',active);
-}
-function refreshProperties(){camSettings=track?.getSettings?.()??{};const exposureMode=camSettings.exposureMode??'미보고';const wbMode=camSettings.whiteBalanceMode??'미보고';lock.exposure=exposureMode==='manual'&&Number.isFinite(camSettings.exposureTime)&&Number.isFinite(camSettings.iso);lock.white=wbMode==='manual'||wbMode==='single-shot';lock.expMode=exposureMode;lock.whiteMode=wbMode;
-$('exposureStatus').textContent=lock.exposure?'수동 고정 확인':exposureMode==='manual'?'수동 모드 / 수치 미확인':'고정 미확인·미지원';$('exposureStatus').className=lock.exposure?'good':'bad';$('wbStatus').textContent=lock.white?(wbMode==='manual'?'수동 고정 확인':'1회 고정 보고됨'):'고정 미확인·미지원';$('wbStatus').className=lock.white?'good':'bad';$('cameraSettings').textContent=(camSettings.iso??'—')+' / '+(camSettings.exposureTime??'—');$('directionStatus').textContent=camSettings.facingMode===undefined?'기기에서 방향 미보고':camSettings.facingMode==='user'?'전면(user) 확인':'전면 미확인 ('+camSettings.facingMode+')';$('directionStatus').className=camSettings.facingMode==='user'?'good':camSettings.facingMode?'bad':'';
-pill('lockBadge',lock.exposure?(lock.white?'노출·색 고정 확인':'노출 고정 확인'):'노출 고정 미확인',lock.exposure?'':'warn');}
-function capabilityControls(){const ex=caps.exposureTime,iso=caps.iso;let exAvail=lock.exposure&&ex&&Number.isFinite(ex.min)&&Number.isFinite(ex.max)&&ex.max>ex.min;let isoAvail=lock.exposure&&iso&&Number.isFinite(iso.min)&&Number.isFinite(iso.max)&&iso.max>iso.min;
-$('exposureRangeWrap').classList.toggle('hidden',!exAvail);$('isoRangeWrap').classList.toggle('hidden',!isoAvail);if(exAvail){let r=$('exposureRange');r.min=String(ex.min);r.max=String(ex.max);r.step=String(ex.step||Math.max(1,(ex.max-ex.min)/200));r.value=String(Math.min(ex.max,Math.max(ex.min,camSettings.exposureTime??ex.min)));$('exposureRangeText').textContent=String(r.value)}if(isoAvail){let r=$('isoRange');r.min=String(iso.min);r.max=String(iso.max);r.step=String(iso.step||1);r.value=String(Math.min(iso.max,Math.max(iso.min,camSettings.iso??iso.min)));$('isoRangeText').textContent=String(r.value)}$('applyManual').disabled=!(exAvail||isoAvail)}
-function stop(){session++;isRunning=false;if(raf)cancelAnimationFrame(raf);raf=null;if(stream)stream.getTracks().forEach(t=>t.stop());stream=null;track=null;video.srcObject=null;live=null;reads=[];historySeries=[];dark=null;openLight=null;camSettings={};caps={};lock={exposure:false,white:false,expMode:'unverified',whiteMode:'unverified'};$('placeholder').classList.remove('hidden');$('stopBtn').disabled=true;$('lockBtn').disabled=true;$('startBtn').disabled=false;$('refreshSettings').disabled=true;$('applyManual').disabled=true;$('darkValue').textContent='미등록';$('openValue').textContent='미등록';$('videoStatus').textContent='● LIVE 대기';$('directionStatus').textContent='대기 중';$('camBadge').textContent='연결 대기';$('camBadge').className='pill off';refreshProperties();capabilityControls();update();drawChart()}
-async function lockCamera(){if(!isRunning||!track)return;try{caps=track.getCapabilities?.()||{};let cur=track.getSettings?.()||{};let steps=[];
-if(Array.isArray(caps.exposureMode)&&caps.exposureMode.includes('manual')){let q={exposureMode:'manual'};
-if(caps.exposureTime&&Number.isFinite(caps.exposureTime.min)&&Number.isFinite(caps.exposureTime.max)){const min=caps.exposureTime.min,max=caps.exposureTime.max;q.exposureTime=Math.min(max,Math.max(min,Number.isFinite(cur.exposureTime)?cur.exposureTime:min+(max-min)*.18))}
-if(caps.iso&&Number.isFinite(caps.iso.min)&&Number.isFinite(caps.iso.max)){const min=caps.iso.min,max=caps.iso.max;q.iso=Math.min(max,Math.max(min,Number.isFinite(cur.iso)?cur.iso:min))}
-steps.push(q)}
-if(Array.isArray(caps.whiteBalanceMode)){if(caps.whiteBalanceMode.includes('manual'))steps.push({whiteBalanceMode:'manual',...(Number.isFinite(cur.colorTemperature)?{colorTemperature:cur.colorTemperature}:{})});else if(caps.whiteBalanceMode.includes('single-shot'))steps.push({whiteBalanceMode:'single-shot'})}
-for(const s of steps){try{await track.applyConstraints({advanced:[s]})}catch{/* 다음 지원 기능은 계속 시도 */}}
-refreshProperties();capabilityControls();status(lock.exposure?'노출 고정 상태를 카메라 보고값으로 확인했습니다. 이제 후레시/시편을 고정하세요.':'이 기기·브라우저에서는 노출 고정을 확인할 수 없습니다. 탐색용 상대 밝기 비교만 가능합니다.');update();
-}catch(err){status('노출 설정 검사 오류: '+err.message);refreshProperties();capabilityControls()}}
-async function start(){stop();if(!navigator.mediaDevices?.getUserMedia){status('카메라 사용 불가: HTTPS 환경에서 실행하거나 카메라 권한을 허용하세요.');return}let token=session;try{stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{exact:'user'},width:{ideal:640},height:{ideal:480},frameRate:{ideal:15,max:30}}});if(token!==session){stream.getTracks().forEach(t=>t.stop());return}track=stream.getVideoTracks()[0];video.srcObject=stream;await video.play();if(token!==session){stop();return}isRunning=true;$('placeholder').classList.add('hidden');$('videoStatus').textContent='● LIVE · 전면';pill('camBadge','전면 카메라 LIVE','');$('stopBtn').disabled=false;$('lockBtn').disabled=false;$('startBtn').disabled=true;$('refreshSettings').disabled=false;refreshProperties();status('카메라 시작 완료. 외부 후레시를 켜고 1~2초 후 노출·색 고정을 시도하세요.');raf=requestAnimationFrame(tick);await new Promise(resolve=>setTimeout(resolve,450));if(token===session)await lockCamera();}catch(e){stop();status('전면 카메라 시작 실패: '+(e.name==='OverconstrainedError'?'전면 카메라 지정이 지원되지 않습니다.':e.name==='NotAllowedError'?'카메라 권한 또는 HTTPS를 확인하세요.':e.message))}}
-function tick(ms){if(!isRunning)return;raf=requestAnimationFrame(tick);if(ms-lastTick<145)return;lastTick=ms;try{live=readFrame();reads.push(live);if(reads.length>24)reads.shift();historySeries.push(live.value);if(historySeries.length>75)historySeries.shift();if(ms-lastSettingsCheck>1800){lastSettingsCheck=ms;const before=settingHash();refreshProperties();if(baseline&&before!==settingHash()){status('카메라 실제 설정이 달라졌습니다. 기준 샘플을 다시 등록해야 합니다.')}}drawChart();update()}catch{}}
-function fixtureChanged(){if(baseline)status('지그/측정 영역 조건이 변경되었습니다. 기존 샘플과 비교하려면 재등록하세요.');reads=[];update()}
-function actionSample(){try{if(!$('fixtureCheck').checked||!isRunning||!goodFrame()||!stable())throw Error('지그 확인 후 일정한 측정값이 안정될 때 등록하세요.');const x=recentMedian('ref');if(dark?.session===session&&x<=dark.value+0.5)throw Error('기준 샘플 신호가 암신호보다 충분히 높지 않습니다.');baseline={session,sensor:'front',hash:settingHash(),raw:x,name:$('sampleName').value.trim()||'기준 GF',time:new Date().toISOString(),mode:cleanLabel(),dark:dark?.session===session?dark.value:0,open:openLight?.session===session?openLight.value:null,fixture:$('fixtureId').value.trim(),location:$('location').value.trim()};persist(BASEKEY,{...baseline,session:null});status('기준 GF 샘플 등록 완료. 테스트 GF를 같은 자리에 넣으면 실시간으로 감소율이 갱신됩니다.');reads=[];update()}catch(e){status(e.message)}}
-function actionTest(){try{if(!validBaseline()||!goodFrame()||!stable()||!$('fixtureCheck').checked)throw Error('기준 샘플/측정 안정도를 먼저 확인하세요.');let raw=recentMedian('test'),D=baseline.dark,netBase=baseline.raw-D,netTest=raw-D;if(!(netBase>0&&netTest>=0))throw Error('암신호 보정 후 유효 신호가 부족합니다.');const r=netTest/netBase*100;let row={time:new Date().toISOString(),location:$('location').value.trim(),sample:baseline.name,product:$('testName').value.trim()||'테스트 GF',treatment:$('treatment').value,fixture:$('fixtureId').value.trim(),light:$('lampMode').value.trim(),mass:$('mass').value,spacer:$('spacer').value,mode:cleanLabel(),base:baseline.raw,test:raw,dark:D,blank:baseline.open,ratio:r,drop:100-r,cv:stats().cv,sampleTime:baseline.time};history.unshift(row);history=history.slice(0,400);persist(ROWKEY,history);showHistory();status('테스트품 '+row.product+' 측정값 기록 완료. 다음 테스트품을 같은 위치에 교체하세요.');}catch(e){status(e.message)}}
-function setDark(){try{if(!lock.exposure)throw Error('자동 노출 상태에서는 암신호를 측정하면 노출 보정으로 오류가 납니다.');let x=recentMedian('dark');dark={value:x,session};baseline=null;openLight=null;$('darkValue').textContent=num(x);$('openValue').textContent='미등록';reads=[];status('암신호 '+num(x)+' 등록됨. 이제 후레시를 다시 켜고 기준 샘플을 등록하세요.');update()}catch(e){status(e.message)}}
-function setOpen(){try{const x=recentMedian('open');if(dark?.session===session&&x<=dark.value+.5)throw Error('빈 광원의 밝기가 암신호에 비해 너무 낮습니다.');openLight={value:x,session};$('openValue').textContent=num(x);baseline=null;reads=[];status('빈 광원 신호 '+num(x)+' 등록됨. GF를 올린 후 기준 샘플을 새로 등록하세요.');update()}catch(e){status(e.message)}}
-function showHistory(){pill('count',history.length+'건','off');if(!history.length){$('history').innerHTML='<div class="fine">아직 측정 기록이 없습니다.</div>';return}let headers='<tr><th>시간</th><th>샘플</th><th>테스트품</th><th>장소</th><th>NO.6 처리(분)</th><th>기준</th><th>테스트</th><th>상대 신호</th><th>감소율</th><th>측정 CV</th><th>노출 상태</th></tr>';$('history').innerHTML='<table><thead>'+headers+'</thead><tbody>'+history.map(r=>'<tr><td>'+escapeHtml(new Date(r.time).toLocaleString('ko-KR'))+'</td><td>'+escapeHtml(r.sample)+'</td><td>'+escapeHtml(r.product)+'</td><td>'+escapeHtml(r.location)+'</td><td>'+escapeHtml(r.treatment)+'</td><td>'+num(r.base)+'</td><td>'+num(r.test)+'</td><td class="good">'+fmt(r.ratio)+'%</td><td>'+fmt(r.drop)+'%</td><td>'+(Number.isFinite(r.cv)?fmt(r.cv)+'%':'—')+'</td><td>'+escapeHtml(r.mode)+'</td></tr>').join('')+'</tbody></table>'}
-function csvCell(v){let x=String(v??'');if(/^[=+@\-\t\r]/.test(x))x="'"+x;return '"'+x.replaceAll('"','""')+'"'}
-function exportCsv(){if(!history.length){status('CSV로 저장할 기록이 없습니다.');return}let keys=['time','location','sample','product','treatment','fixture','light','mass','spacer','mode','base','test','dark','blank','ratio','drop','cv','sampleTime'];let titles=['기록시간','장소','기준GF','테스트GF','NO6처리시간분','지그ID','후레시밝기','하중g','간격mm','촬영고정상태','기준영상신호','테스트영상신호','암신호','빈광원신호','상대신호퍼센트','감소율퍼센트','CV퍼센트','기준등록시간'];let t=[titles.map(csvCell).join(','),...history.map(r=>keys.map(k=>csvCell(r[k])).join(','))].join('\r\n');let obj=URL.createObjectURL(new Blob(['\ufeff'+t],{type:'text/csv;charset=utf-8'}));let a=document.createElement('a');a.href=obj;a.download='NO6_GF_투과신호_측정이력_'+new Date().toISOString().slice(0,10)+'.csv';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(obj),1500);status('측정 이력 CSV를 저장했습니다.')}
-$('startBtn').onclick=start;$('lockBtn').onclick=lockCamera;$('stopBtn').onclick=()=>{stop();status('카메라 종료. 재시작하면 기준 GF를 다시 등록해야 합니다.')};$('saveSample').onclick=actionSample;$('saveTest').onclick=actionTest;$('darkBtn').onclick=setDark;$('openBtn').onclick=setOpen;$('resetSample').onclick=()=>{if(!baseline&&!savedLast)return;if(!confirm('현재 기준 GF를 초기화하시겠습니까?'))return;baseline=null;localStorage.removeItem(BASEKEY);dark=null;openLight=null;$('darkValue').textContent='미등록';$('openValue').textContent='미등록';update();status('기준 샘플과 교정값을 초기화했습니다. (이력은 유지)')};$('export').onclick=exportCsv;$('clear').onclick=()=>{if(!history.length)return;if(!confirm('측정 이력 전체를 삭제하시겠습니까?'))return;history=[];persist(ROWKEY,history);showHistory();status('측정 이력을 삭제했습니다.')};$('refreshSettings').onclick=()=>{refreshProperties();capabilityControls();update();status('카메라 실제 설정값을 다시 확인했습니다.')};
-for(const id of ['fixtureId','lampMode','mass','spacer','roiRange'])$(id).addEventListener('input',()=>{$('roiLabel').textContent=$('roiRange').value+'%';fixtureChanged()});
-$('stabilityLimit').onchange=update;$('fixtureCheck').onchange=update;
-$('exposureRange').oninput=()=>{$('exposureRangeText').textContent=$('exposureRange').value};$('isoRange').oninput=()=>{$('isoRangeText').textContent=$('isoRange').value};
-$('applyManual').onclick=async()=>{if(!track||!lock.exposure)return;let b={exposureMode:'manual'};if(!$('exposureRangeWrap').classList.contains('hidden'))b.exposureTime=Number($('exposureRange').value);if(!$('isoRangeWrap').classList.contains('hidden'))b.iso=Number($('isoRange').value);try{await track.applyConstraints({advanced:[b]});refreshProperties();capabilityControls();reads=[];status('노출·ISO 설정 적용 요청 완료. 기준 GF를 다시 등록하여 비교하세요.');update()}catch(e){status('설정 적용 실패: '+e.message)}};
-window.addEventListener('pagehide',()=>{if(stream)stream.getTracks().forEach(t=>t.stop())});
-showHistory();refreshProperties();update();drawChart();status('외부 후레시·지그를 고정하고 전면 카메라를 시작하세요.');
+(() => { 'use strict';
+ const $ = id => document.getElementById(id);
+ const video=$('video'),frame=$('frame'),ctx=frame.getContext('2d',{willReadFrequently:true});
+ const KEY='no6_gf_front_history_v4', SIZE=320,HEIGHT=240;
+ let stream=null,track=null,raf=0,running=false,session=0,live=null,frames=[],baseline=null,history=[],settings={},locked=false,lastFrameAt=0,lastSettingsAt=0,locking=false;
+ const num=x=>Number.isFinite(x)?x.toFixed(2):'—';
+ const pct=x=>Number.isFinite(x)?x.toFixed(1)+'%':'—';
+ const median=values=>{const a=values.slice().sort((a,b)=>a-b);return a.length?(a.length%2?a[(a.length-1)/2]:(a[a.length/2-1]+a[a.length/2])/2):NaN};
+ const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+ function loadRecords(){try{const v=JSON.parse(localStorage.getItem(KEY)||'[]');return Array.isArray(v)?v:[]}catch{return []}}
+ function persist(){try{localStorage.setItem(KEY,JSON.stringify(history))}catch{setMessage('기록 저장 공간에 접근할 수 없습니다.','warn')}}
+ history=loadRecords();
+ function setMessage(msg,type=''){const e=$('message');e.textContent=msg;e.className='message'+(type?' '+type:'')}
+ function badge(id,text,kind=''){const e=$(id);e.textContent=text;e.className=(id==='cameraBadge'?'badge':'indicator')+(kind?' '+kind:'')}
+ function exposureSnapshot(){const s=track?.getSettings?.()??{};settings=s;locked=s.exposureMode==='manual'&&Number.isFinite(s.exposureTime)&&Number.isFinite(s.iso);badge('exposureState',!running?'노출 확인 전':locked?'노출 고정':'노출 자동 / 미확인',locked?'good':running?'warn':'');$('retry').hidden=!running||locked;return s}
+ function captureKey(){const s=settings;return JSON.stringify({mode:s.exposureMode??'?',iso:locked?s.iso:'auto',time:locked?s.exposureTime:'auto',wb:s.whiteBalanceMode??'?',color:s.colorTemperature??'?',device:s.deviceId??''})}
+ function validBase(){return Boolean(running&&baseline&&baseline.session===session&&baseline.key===captureKey())}
+ function linear(c){const t=c/255;return t<=0.04045?t/12.92:((t+.055)/1.055)**2.4}
+ function readFrame(){if(video.readyState<2||!video.videoWidth)return null;
+  const vw=video.videoWidth,vh=video.videoHeight,scale=Math.min(SIZE/vw,HEIGHT/vh),w=vw*scale,h=vh*scale;
+  ctx.clearRect(0,0,SIZE,HEIGHT);ctx.drawImage(video,(SIZE-w)/2,(HEIGHT-h)/2,w,h);
+  const r=29,x0=SIZE/2-r,y0=HEIGHT/2-r,data=ctx.getImageData(x0,y0,r*2,r*2).data;
+  let sum=0,sumSq=0,n=0,clip=0,black=0;
+  for(let y=0;y<r*2;y+=2)for(let x=0;x<r*2;x+=2){if((x-r)**2+(y-r)**2>r*r)continue;
+   const i=(y*r*2+x)*4,R=data[i],G=data[i+1],B=data[i+2];
+   const v=(.2126*linear(R)+.7152*linear(G)+.0722*linear(B))*100;
+   sum+=v;sumSq+=v*v;n++;if(Math.max(R,G,B)>=250)clip++;if(Math.max(R,G,B)<13)black++;
+  }
+  if(!n)return null;
+  const v=sum/n;return {value:v,clip:clip/n,black:black/n,spatialCV:Math.sqrt(Math.max(0,sumSq/n-v*v))/Math.max(.001,v),at:Date.now()};
+ }
+ function recent(){return frames.filter(f=>Date.now()-f.at<2400).slice(-14)}
+ function measurement(){const a=recent();return median(a.slice(-5).map(f=>f.value))}
+ function variation(){const a=recent();if(!a.length)return {n:0,cv:Infinity};const m=a.reduce((s,f)=>s+f.value,0)/a.length;const d=Math.sqrt(a.reduce((s,f)=>s+(f.value-m)**2,0)/a.length);return {n:a.length,cv:m>0?100*d/m:Infinity}}
+ function quality(){if(!running||!live)return '대기';if(live.clip>=.012||live.value>=97)return '과다광';if(live.value<.3||live.black>=.35)return '광량 부족';if(live.spatialCV>=.6)return '광원 불균일';const s=variation();if(s.n<9)return '안정화 중';if(s.cv>2.5)return '신호 불안정';return '안정'}
+ function update(){const active=validBase(),q=quality(),v=measurement(),s=variation(),comparable=active&&Number.isFinite(v)&&v>=0&&baseline.value>0;const ratio=comparable?v/baseline.value*100:NaN;
+  $('live').textContent=running?num(v):'—';$('base').textContent=active?num(baseline.value):'—';$('ratio').textContent=pct(ratio);$('decrease').textContent=pct(100-ratio);$('ratioBar').style.width=comparable?Math.max(0,Math.min(100,ratio))+'%':'0%';
+  badge('stabilityState',q==='안정'?'안정 · CV '+s.cv.toFixed(1)+'%':q==='신호 불안정'?'불안정 · CV '+s.cv.toFixed(1)+'%':q,q==='안정'?'good':running?'warn':'');
+  $('register').disabled=q!=='안정';$('register').textContent=active?'기준 샘플 재등록':'기준 샘플 등록';
+  $('reset').disabled=!baseline;$('save').disabled=!(comparable&&q==='안정');$('sampleBadge').textContent=active?num(baseline.value):baseline?'재등록 필요':'미등록';$('testStatus').textContent=active?'실시간 비교 중':'기준 등록 필요';
+  if(!running)return;
+  if(!active&&baseline)setMessage('카메라 조건 변경 · 기준 재등록 필요','warn');
+  else if(q==='과다광'||q==='광량 부족'||q==='광원 불균일')setMessage(q+' · 광원/시편 위치를 조정하세요.','warn');
+  else if(q==='안정'&&!locked)setMessage(active?'실시간 비교 중 · 노출 고정 미지원':'신호 안정 · 노출 고정 미지원','warn');
+  else if(q==='안정')setMessage(active?'테스트품 실시간 측정 중':'신호 안정 · 기준 샘플을 등록하세요.');
+  else setMessage(q+' · 잠시 고정해 주세요.','warn');
+ }
+ function stop(){session++;running=false;locking=false;if(raf)cancelAnimationFrame(raf);raf=0;if(stream)stream.getTracks().forEach(t=>t.stop());stream=null;track=null;video.srcObject=null;live=null;frames=[];baseline=null;settings={};locked=false;$('preview').classList.remove('live');$('start').disabled=false;$('start').hidden=false;$('stop').disabled=true;$('stop').hidden=true;$('retry').hidden=true;$('retry').disabled=true;badge('cameraBadge','카메라 OFF');exposureSnapshot();update()}
+ async function lockExposure(){if(!running||!track||locking)return;locking=true;const currentTrack=track;try{
+  const caps=currentTrack.getCapabilities?.()??{},cur=currentTrack.getSettings?.()??{};
+  if(Array.isArray(caps.exposureMode)&&caps.exposureMode.includes('manual')){
+   const req={exposureMode:'manual'};
+   if(caps.exposureTime&&Number.isFinite(caps.exposureTime.min)&&Number.isFinite(caps.exposureTime.max)){
+    const a=caps.exposureTime;req.exposureTime=Math.max(a.min,Math.min(a.max,Number.isFinite(cur.exposureTime)?cur.exposureTime:a.min+(a.max-a.min)*.20));
+   }
+   if(caps.iso&&Number.isFinite(caps.iso.min)&&Number.isFinite(caps.iso.max)){
+    const a=caps.iso;req.iso=Math.max(a.min,Math.min(a.max,Number.isFinite(cur.iso)?cur.iso:a.min));
+   }
+   try{await currentTrack.applyConstraints({advanced:[req]})}catch{}
+  }
+  if(Array.isArray(caps.whiteBalanceMode)){
+   const mode=caps.whiteBalanceMode.includes('manual')?'manual':caps.whiteBalanceMode.includes('single-shot')?'single-shot':null;
+   if(mode){try{await currentTrack.applyConstraints({advanced:[{whiteBalanceMode:mode}]})}catch{}}
+  }
+  if(currentTrack!==track)return;
+  exposureSnapshot();frames=[];baseline=null;setMessage(locked?'카메라 노출 고정 · 기준 샘플을 등록하세요.':'노출 고정 미지원 · 비교값은 참고용입니다.',locked?'':'warn');update();
+ }finally{locking=false}}
+ async function start(){if(running)return;stop();if(!navigator.mediaDevices?.getUserMedia){setMessage('카메라 접근 불가 · HTTPS에서 실행하세요.','bad');return}
+  const token=session;try{
+   let media;
+   try{media=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{exact:'user'},width:{ideal:640},height:{ideal:480},frameRate:{ideal:15,max:30}}})}
+   catch(e){if(e.name!=='OverconstrainedError')throw e;media=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:'user',width:{ideal:640},height:{ideal:480}}})}
+   if(token!==session){media.getTracks().forEach(t=>t.stop());return}
+   stream=media;track=media.getVideoTracks()[0];const direction=track.getSettings?.().facingMode;
+   if(direction==='environment')throw Error('후면 카메라가 연결되었습니다. 전면 카메라를 사용하세요.');
+   video.srcObject=media;await video.play();if(token!==session)return;
+   running=true;$('preview').classList.add('live');$('start').disabled=true;$('start').hidden=true;$('stop').disabled=false;$('stop').hidden=false;$('retry').hidden=false;$('retry').disabled=false;badge('cameraBadge','카메라 ON','good');exposureSnapshot();setMessage('신호 안정화 중...');raf=requestAnimationFrame(tick);
+   await new Promise(resolve=>setTimeout(resolve,850));if(token===session)await lockExposure();
+  }catch(e){stop();setMessage('카메라 시작 실패 · '+(e.name==='NotAllowedError'?'카메라 권한을 허용하세요.':e.message),'bad')}
+ }
+ function tick(now){if(!running)return;raf=requestAnimationFrame(tick);if(now-lastFrameAt<155)return;lastFrameAt=now;
+  try{const x=readFrame();if(!x)return;live=x;frames.push(x);if(frames.length>25)frames.shift();if(now-lastSettingsAt>1800){lastSettingsAt=now;exposureSnapshot()}
+   update();
+  }catch(err){setMessage('영상 측정 오류 · '+err.message,'bad')}
+ }
+ function register(){if(quality()!=='안정')return;const s=recent();const value=median(s.map(f=>f.value));if(!(value>0))return;
+  baseline={value,session,key:captureKey(),time:Date.now()};frames=[];$('testId').value='';setMessage('기준 샘플 등록 완료');update();
+ }
+ function reset(){baseline=null;frames=[];$('testId').value='';setMessage('기준 초기화 완료');update()}
+ function save(){if(!validBase()||quality()!=='안정')return;const v=median(recent().map(x=>x.value)),ratio=v/baseline.value*100;
+  const row={time:new Date().toISOString(),product:$('testId').value.trim()||'테스트 '+String(history.length+1).padStart(3,'0'),base:baseline.value,test:v,ratio,drop:100-ratio,cv:variation().cv,mode:locked?'노출 고정':'노출 미고정'};
+  history.unshift(row);history=history.slice(0,300);persist();renderRecords();setMessage(row.product+' 저장 완료');$('testId').value='';
+ }
+ function renderRecords(){$('count').textContent=history.length+'건';$('records').innerHTML=history.length?history.slice(0,8).map(r=>`<div class="rec"><div class="name">${escapeHtml(r.product)}<span class="detail">${escapeHtml(new Date(r.time).toLocaleString('ko-KR'))}</span></div><div class="ratio">${pct(Number(r.ratio))}</div><div class="drop">${pct(Number(r.drop))} 감소</div></div>`).join(''):'<div class="empty">저장된 측정값이 없습니다.</div>';$('csv').disabled=!history.length;$('erase').disabled=!history.length}
+ function csvCell(value){let s=String(value??'');if(/^[=+@\-\t\r]/.test(s))s="'"+s;return '"'+s.replaceAll('"','""')+'"'}
+ function exportCsv(){if(!history.length)return;const keys=['time','product','base','test','ratio','drop','cv','mode'];const labels=['시간','테스트품','기준 신호','테스트 신호','상대 비율(%)','감소율(%)','안정도 CV(%)','노출 상태'];let rows=[labels.map(csvCell).join(','),...history.map(r=>keys.map(k=>csvCell(r[k])).join(','))];const url=URL.createObjectURL(new Blob(['\ufeff'+rows.join('\r\n')],{type:'text/csv;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='NO6_GF_측정기록_'+new Date().toISOString().slice(0,10)+'.csv';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000)}
+ $('start').addEventListener('click',start);$('stop').addEventListener('click',()=>{stop();setMessage('카메라를 켜주세요.')});$('retry').addEventListener('click',lockExposure);$('register').addEventListener('click',register);$('reset').addEventListener('click',reset);$('save').addEventListener('click',save);$('csv').addEventListener('click',exportCsv);$('erase').addEventListener('click',()=>{if(!history.length||!confirm('측정 기록을 모두 삭제하시겠습니까?'))return;history=[];persist();renderRecords()});
+ window.addEventListener('pagehide',()=>{if(stream)stream.getTracks().forEach(t=>t.stop())});
+ renderRecords();update();
 })();
 </script>
 </body>
